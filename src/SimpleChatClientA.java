@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+
 public class SimpleChatClientA {
 
     JTextField outgoing;
@@ -16,6 +17,8 @@ public class SimpleChatClientA {
         outgoing = new JTextField(20);
         JButton sendButton = new JButton("Send");
         sendButton.addActionListener(new SendButtonListener());
+        outgoing.addKeyListener(new SendKeyListener());
+
         mainPanel.add(outgoing);
         mainPanel.add(sendButton);
         frame.getContentPane().add(BorderLayout.CENTER,mainPanel);
@@ -49,6 +52,25 @@ public class SimpleChatClientA {
             outgoing.requestFocus();
         }
     }
+
+    public class SendKeyListener extends KeyAdapter{
+        public void keyPressed(KeyEvent e) {
+            if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                try {
+                    writer.println(outgoing.getText());
+                    writer.flush();
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+
+                outgoing.setText("");
+                outgoing.requestFocus();
+            }
+        }
+
+
+    }
+
 
     public static void main(String[] args) {
         new SimpleChatClientA().go();
